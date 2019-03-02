@@ -6,8 +6,8 @@ pygame.init()
 display_width = 900
 display_height = 600
 
-black = (0,0,0) #rgb
-white = (255,255,255)  #rgb
+black = (50,50,50) #rgb
+white = (240,240,240)  #rgb
 red = (255,0,0)  #rgb
 
 #aqui simon guarda los valores
@@ -34,7 +34,7 @@ def text_objects(text,font):
     return textSurface, textSurface.get_rect()
 
 def message_display(text,centerX,centerY):
-    largeText = pygame.font.Font('freesansbold.ttf',80)
+    largeText = pygame.font.SysFont('showcardgothic',80)
     textSurface, textRect = text_objects(text,largeText)
     textRect.center = ((centerX,centerY))
     gameDisplay.blit(textSurface,textRect)
@@ -44,30 +44,26 @@ def message_display(text,centerX,centerY):
 
 def game_loop():
     """ Realiza el loop del juego"""
+
+    # Inicializamos variables
     imagen = None
     gameExit=False
-    # Inicializamos variables
     turno = "simon"
     num_simon=0
     num_user=0
     num_intents=0
     simon.append(random.randint(0,3))
-    print("Primera asignacion del simon")
 
     while not gameExit:
         if turno == "simon":
             # message_display("Turno de Simon",display_width/2,display_height*0.1)
-            print("longitud de simon:",len(simon),"num_simon",num_simon)
 
             if num_simon == len(simon):
                 turno ="user"
                 num_intents=0
                 imagen=None
             else:
-                print("Asigno imagen del simon numero:",num_simon)
-                print(simon)
                 imagen = listImg[simon[num_simon]]
-                print(imagen)
                 num_simon+=1
 
         for event in pygame.event.get():
@@ -88,20 +84,19 @@ def game_loop():
                     if num_intents < (len(simon)):
                         #Valido la el numero con el simon
                         if num_user == simon[num_intents]:
-                            print("intento",num_intents,"Good!",num_user," esta bien")
                             # asigno la imagen de la tecla
                             imagen = listImg[num_user]
                             num_intents+=1
                         else:#Si se equivoca, termina el juego
                             message_display("Perdiste!",display_width/2,display_height*.7)
                             gameExit=True
+                            imagen = None
                     if num_intents == (len(simon)):#atinó todas, le toca a simon
                         turno = "simon"
                         #Agrega un elemento mas para que simon muestre
                         simon.append(random.randint(0,3))
                         #reset el num_simon para que muestre desde 0
                         num_simon=0
-            print(event)
 
 
         gameDisplay.fill(white)
@@ -111,6 +106,7 @@ def game_loop():
 
             if turno == "simon" and num_simon == 1:
                 time.sleep(2)
+
             mostrar(imagen,display_width*0.4,display_height*0.2)
 
             if turno == "simon" and num_simon > 0:
@@ -119,23 +115,18 @@ def game_loop():
 
             if turno == "user" and num_intents > 0 and num_simon is not 0:
                 mostrar(bien,display_width*.35,display_height*0.55 )
+                message_display(" Turno ["+str(num_intents)+"]",display_width/2,display_height*.1)
 
         if turno == "user" and num_intents == 0:
             message_display("Tu turno",display_width/2,display_height*0.1)
         elif turno == "simon" and num_simon ==0:
+            message_display(" Turno ["+str(num_intents)+"]",display_width/2,display_height*.1)
             mostrar(Good,display_width*.25,display_height*0.2)
-            # time.sleep(2)
-            # gameDisplay.fill(white)
 
         pygame.display.update()#tambien se puede usar .flip() pero es para toda la pantalla
         clock.tick(30)#Frames per second
 
 game_loop()
+
 pygame.quit()
 quit()
-
-# while True:
-#     for event in pygame.event.get():
-#         pygame.quit()
-#         sys.exit()
-#     pygame.display.update()
