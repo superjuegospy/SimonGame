@@ -34,8 +34,8 @@ def text_objects(text,font):
     return textSurface, textSurface.get_rect()
 
 def message_display(text,centerX,centerY):
-    largeText = pygame.font.SysFont('showcardgothic',80)
-    textSurface, textRect = text_objects(text,largeText)
+    font = pygame.font.SysFont('showcardgothic',80)
+    textSurface, textRect = text_objects(text,font)
     textRect.center = ((centerX,centerY))
     gameDisplay.blit(textSurface,textRect)
 
@@ -50,7 +50,7 @@ def game_loop():
     gameExit=False
     turno = "simon"
     num_simon=0
-    num_user=0
+    num_user=None
     num_intents=0
     simon.append(random.randint(0,3))
 
@@ -93,6 +93,7 @@ def game_loop():
                             imagen = None
                     if num_intents == (len(simon)):#atinó todas, le toca a simon
                         turno = "simon"
+                        num_user= None
                         #Agrega un elemento mas para que simon muestre
                         simon.append(random.randint(0,3))
                         #reset el num_simon para que muestre desde 0
